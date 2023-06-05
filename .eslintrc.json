@@ -12,6 +12,8 @@
         "no-unused-vars": "off",
         "global-require": "off",
         "import/no-dynamic-require": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "no-underscore-dangle": "off",
+        "class-methods-use-this": "off"
     }
 }

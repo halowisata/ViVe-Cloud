@@ -1,11 +1,13 @@
 {
-  "name": "backend",
+  "name": "vive-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./ --fix",
+    "start:dev": "nodemon ./src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +20,12 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.3.3",
     "sequelize": "^6.32.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^2.0.22",
+    "sequelize-cli": "^6.6.0"
   }
 }

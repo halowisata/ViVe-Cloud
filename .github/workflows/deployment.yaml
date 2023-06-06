@@ -1,4 +1,4 @@
-name: GAC Deployment
+name: GCAE Deployment
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Google Cloud
+    name: Deploy to Google Cloud App Engine
     runs-on: ubuntu-latest
 
     steps:

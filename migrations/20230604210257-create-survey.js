@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: {
-            tableName: 'users',
+            tableName: 'Users',
             key: 'id',
           },
         },
@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: {
-            tableName: 'moods',
+            tableName: 'Moods',
             key: 'id',
           },
         },

@@ -19,19 +19,6 @@ jobs:
     - name: Install dependencies
       run: npm i
 
-    - name: Create config.json
-      run: |
-        mkdir config
-        echo '{
-          "production": {
-            "host": "'${{ secrets.MYSQL_HOST }}'",
-            "database": "'${{ secrets.MYSQL_DATABASE }}'",
-            "username": "'${{ secrets.MYSQL_USERNAME }}'",
-            "password": "'${{ secrets.MYSQL_PASSWORD }}'",
-            "dialect": "'${{ secrets.MYSQL_DIALECT }}'"
-          }
-        }' > config/config.json
-
     - name: Run Migrations
       run: npm run migrate
     

@@ -14,9 +14,29 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Survey.init({
-    id: DataTypes.STRING,
-    userId: DataTypes.STRING,
-    moodId: DataTypes.STRING,
+    id: {
+      primaryKey: true,
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
+    userId: {
+      type: DataTypes.STRING,
+      references: {
+        model: {
+          tableName: 'users',
+          key: 'id',
+        },
+      },
+    },
+    moodId: {
+      type: DataTypes.STRING,
+      references: {
+        model: {
+          tableName: 'moods',
+          key: 'id',
+        },
+      },
+    },
     budget: DataTypes.STRING,
     travelDistance: DataTypes.STRING,
     destinationCity: DataTypes.STRING,

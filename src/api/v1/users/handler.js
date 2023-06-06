@@ -10,16 +10,18 @@ class UsersHandler {
   async postUserHandler(req, res) {
     try {
       await this._validator.validateUserPayload(req.body);
+      await this._service.verifyAvailableEmail(req.body.email);
 
       const addedUser = await this._service.addUser(req.body);
 
       return res.status(201).json({
-        status: 'success',
+        error: false,
+        message: 'user created',
         data: addedUser,
       });
     } catch (error) {
       return res.status(400).json({
-        status: 'fail',
+        error: true,
         message: error.message,
       });
     }
@@ -27,15 +29,16 @@ class UsersHandler {
 
   async getUserHandler(req, res) {
     try {
-      const retrievedUser = await this._service.getUser(req.params.id);
+      const retrievedUser = await this._service.getUser(req.user.id);
 
       return res.status(200).json({
-        status: 'success',
+        error: false,
+        message: 'user retrieved',
         data: retrievedUser,
       });
     } catch (error) {
       return res.status(400).json({
-        status: 'fail',
+        error: true,
         message: error.message,
       });
     }

@@ -3,8 +3,17 @@ const bcrypt = require('bcrypt');
 const { User } = require('../../../models');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthenticationError = require('../../exceptions/AuthenticationError');
+const InvariantError = require('../../exceptions/InvariantError');
 
 class UsersService {
+  async verifyAvailableEmail(email) {
+    const retrievedUser = await User.findOne({ where: { email } });
+
+    if (retrievedUser) {
+      throw new InvariantError('cannot create user. email has been used');
+    }
+  }
+
   async addUser(newUser) {
     const { name, email, password } = newUser;
     const id = `user-${nanoid(16)}`;

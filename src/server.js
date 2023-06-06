@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
 const userRoutes = require('./api/v1/users/routes');
 const authenticationRoutes = require('./api/v1/authentications/routes');
@@ -12,8 +11,7 @@ const init = async () => {
   try {
     await sequelize.authenticate();
 
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(bodyParser.json());
+    app.use(express.json());
     app.use('/api/v1/users', userRoutes);
     app.use('/api/v1/authentications', authenticationRoutes);
 
@@ -28,7 +26,7 @@ const init = async () => {
       err.statusCode = err.statusCode || 500;
       err.status = err.status || 'error';
       res.status(err.statusCode).json({
-        status: err.status,
+        error: true,
         message: err.message,
       });
     });

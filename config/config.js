@@ -21,5 +21,8 @@ module.exports = {
     database: process.env.MYSQL_DATABASE,
     host: process.env.MYSQL_HOST,
     dialect: process.env.MYSQL_DIALECT,
+    dialectOptions: {
+      socketPath: process.env.MYSQL_HOST,
+    },
   },
 };

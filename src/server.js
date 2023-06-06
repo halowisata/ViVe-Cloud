@@ -31,7 +31,11 @@ const init = async () => {
       });
     });
 
-    app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+    app.listen(
+      process.env.PORT,
+      process.env.HOST,
+      () => console.log(`Server running on port ${process.env.PORT}`),
+    );
   } catch (error) {
     console.error(`Unable to run server: ${error}`);
   }

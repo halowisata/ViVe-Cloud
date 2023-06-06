@@ -1,12 +1,11 @@
 const Jwt = require('jsonwebtoken');
-const AuthorizationError = require('../exceptions/AuthorizationError');
 const AuthenticationError = require('../exceptions/AuthenticationError');
 
-const verifyToken = (req, res, next) => {
+const authentications = (req, res, next) => {
   const bearerToken = req.headers.authorization;
 
   if (!bearerToken) {
-    throw new AuthorizationError('login to proceed');
+    throw new AuthenticationError('sign in to proceed');
   }
 
   try {
@@ -21,4 +20,4 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-module.exports = verifyToken;
+module.exports = authentications;

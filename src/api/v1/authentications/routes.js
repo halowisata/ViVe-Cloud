@@ -16,5 +16,7 @@ const handler = new AuthenticationsHandler(
 const router = express.Router();
 
 router.post('/', handler.postAuthenticationHandler);
+router.put('/', handler.putAuthenticationHandler);
+router.delete('/', handler.deleteAuthenticationHandler);
 
 module.exports = router;

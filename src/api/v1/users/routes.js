@@ -1,12 +1,13 @@
 const express = require('express');
 const UsersHandler = require('./handler');
-const UsersService = require('../../../services/mysql/UsersService');
+const UsersService = require('../../../services/sequelize/UsersService');
+const validator = require('../../../validator/users');
 
-const usersService = new UsersService();
-const usersHandler = new UsersHandler(usersService);
+const service = new UsersService();
+const handler = new UsersHandler(service, validator);
 const router = express.Router();
 
-router.post('/', usersHandler.getUserHandler);
-router.get('/', usersHandler.getUserHandler);
+router.post('/', handler.postUserHandler);
+router.get('/:id', handler.getUserHandler);
 
 module.exports = router;

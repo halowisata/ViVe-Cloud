@@ -1,0 +1,51 @@
+name: GAC Deployment
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Google Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: npm i
+
+    - name: Create config.json
+      run: |
+        mkdir config
+        echo '{
+          "production": {
+            "host": "'${{ secrets.MYSQL_HOST }}'",
+            "database": "'${{ secrets.MYSQL_DATABASE }}'",
+            "username": "'${{ secrets.MYSQL_USERNAME }}'",
+            "password": "'${{ secrets.MYSQL_PASSWORD }}'",
+            "dialect": "'${{ secrets.MYSQL_DIALECT }}'"
+          }
+        }' > config/config.json
+
+    - name: Run Migrations
+      run: npm run migrate
+    
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0.2.0
+      with:
+        deliverables: app.standard.yaml
+        version: v1
+        project_id: ${{ secrets.GCP_PROJECT }}
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Test
+      run: curl "${{ steps.deploy.outputs.url }}"

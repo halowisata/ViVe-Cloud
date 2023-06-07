@@ -1,4 +1,4 @@
-name: GCAE Deployment
+name: Google Cloud Deployment
 
 on:
   push:
@@ -16,8 +16,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+
     - name: Install dependencies
-      run: npm i
+      run: npm install
 
     - name: Run Migrations
       run: npm run migrate
@@ -31,14 +36,41 @@ jobs:
         ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
         REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
     
-    - name: Deploy to App Engine
-      id: deploy
-      uses: google-github-actions/deploy-appengine@v0.2.0
+    # - name: Deploy to App Engine
+    #   id: deploy
+    #   uses: google-github-actions/deploy-appengine@v0.2.0
+    #   with:
+    #     deliverables: app.standard.yaml
+    #     version: v1
+    #     project_id: ${{ secrets.GCP_PROJECT }}
+    #     credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Build and Push Docker Image
+      uses: docker/setup-buildx-action@v2
       with:
-        deliverables: app.standard.yaml
-        version: v1
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
         project_id: ${{ secrets.GCP_PROJECT }}
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Run to Cloud Run
+      run: |
+        gcloud builds submit --config=cloudbuild.yaml
+
+    # - name: Test
+    #   run: curl "${{ steps.deploy.outputs.url }}"
 
     - name: Test
-      run: curl "${{ steps.deploy.outputs.url }}"
+      run: |
+        gcloud run services describe backend --format 'value(status.url)'
+
+    - name: Clean up
+      run: |
+        IMAGE=gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+        gcloud container images delete $IMAGE --quiet

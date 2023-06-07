@@ -22,7 +22,8 @@ module.exports = {
     host: process.env.MYSQL_HOST,
     dialect: process.env.MYSQL_DIALECT,
     dialectOptions: {
-      socketPath: process.env.MYSQL_HOST,
+      socketPath:
+      process.env.MYSQL_HOST.startsWith('/path/to/socket') ? process.env.MYSQL_HOST : undefined,
     },
   },
 };

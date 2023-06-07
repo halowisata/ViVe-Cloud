@@ -12,7 +12,20 @@ let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  const sequelizeConfig = {
+    database: config.database,
+    username: config.username,
+    password: config.password,
+    ...config,
+  };
+
+  if (env === 'production') {
+    sequelizeConfig.dialectOptions = {
+      socketPath: process.env.MYSQL_HOST,
+    };
+  }
+
+  sequelize = new Sequelize(sequelizeConfig);
 }
 
 fs

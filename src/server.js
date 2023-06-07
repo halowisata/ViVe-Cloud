@@ -1,12 +1,26 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const userRoutes = require('./api/v1/users/routes');
 const authenticationRoutes = require('./api/v1/authentications/routes');
 
 const app = express();
 
 const init = async () => {
+  const allowedOrigins = ['*'];
+
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const message = `The CORS policy for this application doesn’t allow access from origin ${origin}`;
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
+    },
+  }));
+
   app.use(express.json());
   app.use('/api/v1/users', userRoutes);
   app.use('/api/v1/authentications', authenticationRoutes);

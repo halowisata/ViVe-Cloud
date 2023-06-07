@@ -1,7 +1,7 @@
 {
   "name": "vive-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Tourism recommendation system RESTful-API based on user mood.",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

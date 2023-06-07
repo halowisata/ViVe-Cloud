@@ -1,7 +1,8 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
+const getSecret = require('../helpers');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
@@ -10,26 +11,37 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  const secretValue = await getSecret(process.env[config.use_env_variable]);
+  sequelize = new Sequelize(secretValue.trim(), config);
 } else {
   const sequelizeConfig = {
-    database: config.database,
-    username: config.username,
-    password: config.password,
     ...config,
   };
 
-  if (env === 'production') {
+  if (env === 'development') {
+    sequelizeConfig.database = process.env.MYSQL_DATABASE;
+    sequelizeConfig.username = process.env.MYSQL_USERNAME;
+    sequelizeConfig.password = process.env.MYSQL_PASSWORD;
+    sequelizeConfig.host = process.env.MYSQL_HOST;
+  } else if (env === 'production') {
+    const mysqlHost = process.env.GITHUB_ACTION ? process.env.MYSQL_HOST : await getSecret('MYSQL_HOST');
+    const mysqlDatabase = process.env.GITHUB_ACTION ? process.env.MYSQL_DATABASE : await getSecret('MYSQL_DATABASE');
+    const mysqlUsername = process.env.GITHUB_ACTION ? process.env.MYSQL_USERNAME : await getSecret('MYSQL_USERNAME');
+    const mysqlPassword = process.env.GITHUB_ACTION ? process.env.MYSQL_PASSWORD : await getSecret('MYSQL_PASSWORD');
+
+    sequelizeConfig.database = mysqlDatabase.trim();
+    sequelizeConfig.username = mysqlUsername.trim();
+    sequelizeConfig.password = mysqlPassword.trim();
+
     sequelizeConfig.dialectOptions = {
-      socketPath: process.env.MYSQL_HOST,
+      socketPath: mysqlHost.trim().startsWith('/path/to/socket') ? mysqlHost.trim() : undefined,
     };
   }
 
   sequelize = new Sequelize(sequelizeConfig);
 }
 
-fs
-  .readdirSync(__dirname)
+fs.readdirSync(__dirname)
   .filter((file) => (
     file.indexOf('.') !== 0
       && file !== basename

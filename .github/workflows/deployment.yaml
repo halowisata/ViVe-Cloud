@@ -5,8 +5,6 @@ on:
     branches:
       - master
 
-  workflow_dispatch:
-
 jobs:
   deploy:
     name: Deploy to Google Cloud
@@ -57,8 +55,3 @@ jobs:
     - name: Test
       run: |
         gcloud run services describe backend --format 'value(status.url)'
-
-    - name: Clean up
-      run: |
-        IMAGE=gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
-        gcloud container images delete $IMAGE --quiet

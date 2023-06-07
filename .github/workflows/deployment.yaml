@@ -35,8 +35,6 @@ jobs:
         MYSQL_DIALECT: ${{ secrets.MYSQL_DIALECT }}
         ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
         REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
-    
-
 
     - name: Build and Push Docker Image
       uses: docker/setup-buildx-action@v2
@@ -55,8 +53,6 @@ jobs:
     - name: Run to Cloud Run
       run: |
         gcloud builds submit --config=cloudbuild.yaml
-
-    
 
     - name: Test
       run: |

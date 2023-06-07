@@ -14,7 +14,7 @@
     "migrate:down:dev": "npx sequelize-cli db:migrate:undo",
     "migrate:down": "npx sequelize-cli db:migrate:undo --env production"
   },
-  "author": "",
+  "author": "ViVe Team",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",

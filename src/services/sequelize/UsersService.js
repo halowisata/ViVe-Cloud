@@ -33,7 +33,9 @@ class UsersService {
   async getUser(id) {
     const retrievedUser = await User.findOne({
       where: { id },
-      attributes: ['id', 'name', 'username', 'email', 'phoneNumber', 'address', 'gender', 'photo'],
+      attributes: [
+        'id', 'name', 'username', 'email', 'phoneNumber', 'address', 'gender', 'photo',
+      ],
     });
 
     if (!retrievedUser) {

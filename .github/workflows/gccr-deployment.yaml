@@ -1,0 +1,55 @@
+name: GCCR Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build and Push Docker Image
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
+          gcloud config set project $PROJECT_ID
+          gcloud auth configure-docker
+          docker build -t gcr.io/$PROJECT_ID/backend .
+          docker push gcr.io/$PROJECT_ID/backend
+
+      - name: Deploy to Cloud Run
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+          REGION: asia-southeast2
+          SERVICE_NAME: backend
+          IMAGE_URL: gcr.io/$PROJECT_ID/backend
+          MYSQL_HOST: ${{ secrets.MYSQL_CONNECTION_NAME }}
+          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image $IMAGE_URL \
+            --platform managed \
+            --region $REGION \
+            --allow-unauthenticated \
+            --set-env-vars \
+              MYSQL_HOST=$MYSQL_HOST, \
+              MYSQL_USERNAME=$MYSQL_USERNAME, \
+              MYSQL_PASSWORD=$MYSQL_PASSWORD, \
+              MYSQL_DATABASE=$MYSQL_DATABASE

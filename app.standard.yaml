@@ -2,7 +2,7 @@ runtime: nodejs18
 
 env_variables:
   PORT: 8080
-  MYSQL_HOST: /cloudsql/viveteam:asia-southeast2-a:vive-app-sql-instance
+  MYSQL_HOST: /cloudsql/viveteam:asia-southeast2:vive-app-sql-instance
   MYSQL_DATABASE: vive_app
   MYSQL_USERNAME: vive_app_sql_user
   MYSQL_PASSWORD: c23-pc704-vive

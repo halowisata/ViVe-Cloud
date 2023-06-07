@@ -41,9 +41,9 @@ module.exports = {
       host,
       dialect,
       dialectOptions: {
-        socketPath: (await getSecret('MYSQL_HOST')).startsWith('/path/to/socket')
-          ? await getSecret('MYSQL_HOST')
-          : undefined,
+        socketPath: process.env.GITHUB_ACTION
+          ? undefined
+          : await getSecret('MYSQL_HOST'),
       },
     };
   },

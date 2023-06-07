@@ -6,50 +6,32 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to Google Cloud
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
 
-      - name: Install Dependencies
-        run: npm install
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        project_id: ${{ secrets.GCP_PROJECT }}
 
-      - name: Build and Push Docker Image
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-        run: |
-          gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
-          gcloud config set project $PROJECT_ID
-          gcloud auth configure-docker
-          docker build -t gcr.io/$PROJECT_ID/backend .
-          docker push gcr.io/$PROJECT_ID/backend
+    - name: Run Cloud Build
+      run: |
+        gcloud builds submit --config=cloudbuild.yaml .
 
-      - name: Deploy to Cloud Run
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
-          REGION: asia-southeast2
-          SERVICE_NAME: backend
-          IMAGE_URL: gcr.io/$PROJECT_ID/backend
-          MYSQL_HOST: ${{ secrets.MYSQL_CONNECTION_NAME }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-        run: |
-          gcloud run deploy $SERVICE_NAME \
-            --image $IMAGE_URL \
-            --platform managed \
-            --region $REGION \
-            --allow-unauthenticated \
-            --set-env-vars \
-              MYSQL_HOST=$MYSQL_HOST, \
-              MYSQL_USERNAME=$MYSQL_USERNAME, \
-              MYSQL_PASSWORD=$MYSQL_PASSWORD, \
-              MYSQL_DATABASE=$MYSQL_DATABASE
+    - name: Test
+      run: |
+        gcloud run services describe backend --format 'value(status.url)'

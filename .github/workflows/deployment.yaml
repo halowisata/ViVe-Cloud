@@ -50,7 +50,7 @@ jobs:
           version: v1
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_CREDENTIALS }}
-          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:latest
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         id: deploy_cloud_run
@@ -58,7 +58,7 @@ jobs:
         with:
           service: backend
           region: asia-southeast2
-          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:latest
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend:${{ github.sha }}
           env: |
             PORT=${{ secrets.PORT }}
             MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}

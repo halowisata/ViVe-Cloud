@@ -1,0 +1,71 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_push_deploy:
+    name: Build Push Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Migrations
+        run: npm run migrate
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DIALECT: ${{ secrets.MYSQL_DIALECT }}
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/setup-gcloud@v0.5.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Build and Push
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud builds submit --config cloudbuild.yaml .
+
+      - name: Deploy to App Engine
+        id: deploy_app_engine
+        uses: google-github-actions/deploy-appengine@v0.2.0
+        with:
+          deliverables: app.standard.yaml
+          version: v1
+          project_id: ${{ secrets.GCP_PROJECT }}
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend
+
+      - name: Deploy to Cloud Run
+        id: deploy_cloud_run
+        uses: google-github-actions/deploy-cloudrun@v0.3.0
+        with:
+          service: backend
+          region: asia-southeast2
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend
+          env: |
+            PORT=${{ secrets.PORT }}
+            MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}
+            MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_DIALECT=${{ secrets.MYSQL_DIALECT }}
+            ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
+            REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
+          credentials: ${{ secrets.GCP_CREDENTIALS }}

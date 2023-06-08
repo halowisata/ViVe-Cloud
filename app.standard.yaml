@@ -1,0 +1,11 @@
+runtime: nodejs18
+
+env_variables:
+  PORT: 8080
+  MYSQL_HOST: /cloudsql/viveteam:asia-southeast2:vive-app-sql-instance
+  MYSQL_DATABASE: vive_app
+  MYSQL_USERNAME: vive_app_sql_user
+  MYSQL_PASSWORD: c23-pc704-vive
+  MYSQL_DIALECT: mysql
+  ACCESS_TOKEN_KEY: 18f395f6449bcdfa55192364000e1dc696ee34258e6db4bb1f37cc12d7cce2cdcdea11d8f440e0321f3dfa04960cd105127e43ade24a177e0f666133c927f884
+  REFRESH_TOKEN_KEY: e16f1531f24b7e9af6d594acaab9b5283c42f97eef079f603fbaf5baa378bc9ae05010c6947bf4691ec8c883d2d66aea2b4e0522382fc77813f91a011dd396b0

@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  deploy:
-    name: Deploy to Google Cloud
+  build_and_push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
 
     steps:
@@ -37,9 +37,24 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Build and Deploy
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+      - name: Build Docker Image
         run: |
-          gcloud config set project $PROJECT_ID
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
           gcloud builds submit --config cloudbuild.yaml .
+
+  deploy:
+    name: Deploy to Google Cloud
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/setup-gcloud@v0.5.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Deploy to App Engine
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud app deploy app.standard.yaml --image-url asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend

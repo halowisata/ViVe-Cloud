@@ -57,4 +57,4 @@ jobs:
       - name: Deploy to App Engine
         run: |
           gcloud config set project ${{ secrets.GCP_PROJECT }}
-          gcloud app deploy app.standard.yaml --image-url asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend
+          gcloud app deploy --config app.standard.yaml --image-url asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend

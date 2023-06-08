@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  deploy:
-    name: Build and Push Docker Image
+  build_push_deploy:
+    name: Build Push Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -43,10 +43,28 @@ jobs:
           gcloud builds submit --config cloudbuild.yaml .
 
       - name: Deploy to App Engine
-        id: deploy
+        id: deploy_app_engine
         uses: google-github-actions/deploy-appengine@v0.2.0
         with:
           deliverables: app.standard.yaml
+          version: v1
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_CREDENTIALS }}
           image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        id: deploy_cloud_run
+        uses: google-github-actions/deploy-cloudrun@v0.3.0
+        with:
+          service: backend
+          region: asia-southeast2
+          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+          env: |
+            PORT=${{ secrets.PORT }}
+            MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}
+            MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_DIALECT=${{ secrets.MYSQL_DIALECT }}
+            ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
+            REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}

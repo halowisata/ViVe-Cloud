@@ -32,13 +32,12 @@ jobs:
           MYSQL_DIALECT: ${{ secrets.MYSQL_DIALECT }}
 
       - name: Authenticate with Google Cloud
-        uses: google-github-actions/authenticate-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v0.5.0
         with:
-          credentials: ${{ secrets.GCP_CREDENTIALS }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Build and Deploy
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
         run: |
           gcloud config set project $PROJECT_ID
           gcloud builds submit --config cloudbuild.yaml .

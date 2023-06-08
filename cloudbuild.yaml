@@ -6,7 +6,3 @@ steps:
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend']
-    
-  # Deploy to App Engine
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['app', 'deploy', 'app.standard.yaml', '--image-url', 'asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend']

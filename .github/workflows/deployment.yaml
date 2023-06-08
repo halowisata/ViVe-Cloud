@@ -40,7 +40,7 @@ jobs:
       - name: Build and Push
         run: |
           gcloud config set project ${{ secrets.GCP_PROJECT }}
-          gcloud builds submit --config cloudbuild.yaml --substitutions=_COMMIT_SHA=${{ github.sha }}
+          gcloud builds submit --config cloudbuild.yaml .
 
       - name: Deploy to App Engine
         id: deploy_app_engine
@@ -50,7 +50,7 @@ jobs:
           version: v1
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_CREDENTIALS }}
-          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:latest
 
       - name: Deploy to Cloud Run
         id: deploy_cloud_run
@@ -58,7 +58,7 @@ jobs:
         with:
           service: backend
           region: asia-southeast2
-          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:latest
           env: |
             PORT=${{ secrets.PORT }}
             MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}

@@ -3,7 +3,7 @@ name: Deployment
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build_push_deploy:
@@ -50,7 +50,7 @@ jobs:
           version: v1
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_CREDENTIALS }}
-          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend:${{ github.sha }}
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend
 
       - name: Deploy to Cloud Run
         id: deploy_cloud_run
@@ -58,7 +58,7 @@ jobs:
         with:
           service: backend
           region: asia-southeast2
-          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend:${{ github.sha }}
+          image: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/vive-app/backend
           env: |
             PORT=${{ secrets.PORT }}
             MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}

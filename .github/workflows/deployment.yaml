@@ -42,7 +42,7 @@ jobs:
           gcloud config set project ${{ secrets.GCP_PROJECT }}
           gcloud builds submit --config cloudbuild.yaml .
 
-  deploy:
+  deploy_app_engine:
     name: Deploy to Google App Engine
     needs: build_and_push
     runs-on: ubuntu-latest
@@ -63,19 +63,19 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
-    deploy:
-      name: Deploy to Google Cloud Run
-      needs: build_and_push
-      runs-on: ubuntu-latest
-  
-      steps:
-        - name: Authenticate with Google Cloud
-          uses: google-github-actions/setup-gcloud@v0.5.0
-          with:
-            project_id: ${{ secrets.GCP_PROJECT }}
-            service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-  
-        - name: Deploy to Cloud Run
-          run: |
-            gcloud config set project ${{ secrets.GCP_PROJECT }}
-            gcloud run deploy vive-api --image=asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend --platform=managed --region=asia-southeast2
+  deploy_cloud_run:
+    name: Deploy to Google Cloud Run
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/setup-gcloud@v0.5.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud run deploy vive-api --image=asia-southeast2-docker.pkg.dev/viveteam/vive-app/backend --platform=managed --region=asia-southeast2

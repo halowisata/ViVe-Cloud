@@ -38,6 +38,8 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Build and Deploy
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT }}
         run: |
           gcloud config set project $PROJECT_ID
           gcloud builds submit --config cloudbuild.yaml .

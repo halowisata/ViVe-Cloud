@@ -58,7 +58,7 @@ jobs:
         with:
           service: backend
           region: asia-southeast2
-          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend:${{ github.sha }}
+          image: gcr.io/${{ secrets.GCP_PROJECT }}/backend
           env: |
             PORT=${{ secrets.PORT }}
             MYSQL_HOST=${{ secrets.MYSQL_CONNECTION_NAME }}

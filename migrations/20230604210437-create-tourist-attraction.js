@@ -7,16 +7,22 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      place_id: {
+        type: Sequelize.INTEGER,
+      },
       name: {
         type: Sequelize.STRING,
       },
       description: {
         type: Sequelize.STRING,
       },
-      photo: {
+      city: {
         type: Sequelize.STRING,
       },
       rating: {
+        type: Sequelize.STRING,
+      },
+      photo: {
         type: Sequelize.STRING,
       },
       lat: {

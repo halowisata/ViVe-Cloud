@@ -14,7 +14,8 @@
     "migrate:down:dev": "npx sequelize-cli db:migrate:undo",
     "migrate:down": "npx sequelize-cli db:migrate:undo --env production",
     "seed:generate": "npx sequelize-cli seed:generate --name",
-    "seed": "npx sequelize-cli db:seed:all"
+    "seed:up": "npx sequelize-cli db:seed:all",
+    "seed:down": "npx sequelize-cli db:seed:undo:all"
   },
   "author": "ViVe Team",
   "license": "ISC",

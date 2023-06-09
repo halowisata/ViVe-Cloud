@@ -10,7 +10,7 @@ class MoodsHandler {
 
     return res.status(200).json({
       error: false,
-      message: 'Moods retrieved',
+      message: 'moods retrieved',
       data: retrievedMoods,
     });
   }

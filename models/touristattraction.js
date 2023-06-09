@@ -19,10 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
     },
+    place_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
-    photo: DataTypes.STRING,
+    city: DataTypes.STRING,
     rating: DataTypes.STRING,
+    photo: DataTypes.STRING,
     lat: DataTypes.DOUBLE,
     lon: DataTypes.DOUBLE,
   }, {

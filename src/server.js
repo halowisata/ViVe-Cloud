@@ -2,10 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const userRoutes = require('./api/v1/users/routes');
-const authenticationRoutes = require('./api/v1/authentications/routes');
-const moodRoutes = require('./api/v1/moods/routes');
-const touristAttractionRoutes = require('./api/v1/tourist_attractions/routes');
+const v1 = require('./api/v1');
 
 const app = express();
 
@@ -24,10 +21,7 @@ const init = async () => {
   }));
 
   app.use(express.json());
-  app.use('/api/v1/users', userRoutes);
-  app.use('/api/v1/authentications', authenticationRoutes);
-  app.use('/api/v1/moods', moodRoutes);
-  app.use('/api/v1/tourist-attractions', touristAttractionRoutes);
+  app.use('/api/v1', v1);
 
   app.all('*', (req, res, next) => {
     const err = new Error(`Can't find ${req.originalUrl} on this server!`);

@@ -9,10 +9,10 @@ Tourism recommendation system RESTful-API based on user mood.
 To start running this project locally,
 
 ```bash
-git https://github.com/vive-team/ViVe-Cloud.git
+git clone -b development https://github.com/vive-team/ViVe-Cloud.git vive-api
 ```
 
-Open siromo-api directory and install all required dependencies
+Open vive-api directory and install all required dependencies
 
 ```bash
 npm install
@@ -26,7 +26,7 @@ cp .env.example .env
 
 Create the database to MySQL with name
 
-```
+```bash
 vive_app
 ```
 

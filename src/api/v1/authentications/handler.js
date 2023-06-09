@@ -74,7 +74,7 @@ class AuthenticationsHandler {
 
       return res.json({
         error: false,
-        message: 'logged out successfully',
+        message: 'sign out success',
       });
     } catch (error) {
       return res.status(400).json({

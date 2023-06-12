@@ -22,8 +22,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Migrations and Seeds to Cloud SQL
-        run: npm run migrate && npm run seed:down
+      - name: Run Migrations to Cloud SQL
+        run: npm run migrate
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}

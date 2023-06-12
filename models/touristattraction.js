@@ -14,12 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   TouristAttraction.init({
-    id: {
-      primaryKey: true,
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
-    place_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     city: DataTypes.STRING,

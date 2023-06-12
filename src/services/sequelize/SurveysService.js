@@ -1,16 +1,13 @@
-const { nanoid } = require('nanoid');
 const { Survey } = require('../../../models');
 
 class SurveysService {
   async addSurvey(userId, newSurvey) {
     const {
-      moodId, budget, travelDistance, destinationCity,
+      mood, budget, travelDistance, destinationCity,
     } = newSurvey;
-    const id = `survey-${nanoid(16)}`;
     const addedSurvey = await Survey.create({
-      id,
       userId,
-      moodId,
+      mood,
       budget,
       travelDistance,
       destinationCity,

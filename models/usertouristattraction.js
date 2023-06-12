@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   TouristAttraction.init({
-    id: {
-      primaryKey: true,
-      allowNull: false,
-      type: DataTypes.STRING,
-    },
     userId: {
       type: DataTypes.STRING,
       references: {
@@ -28,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     },
-    moodId: {
+    touristAttractionId: {
       type: DataTypes.STRING,
       references: {
         model: {

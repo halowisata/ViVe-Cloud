@@ -1,4 +1,3 @@
-const { nanoid } = require('nanoid');
 const bcrypt = require('bcrypt');
 const { User } = require('../../../models');
 const NotFoundError = require('../../exceptions/NotFoundError');
@@ -16,11 +15,8 @@ class UsersService {
 
   async addUser(newUser) {
     const { name, email, password } = newUser;
-    const id = `user-${nanoid(16)}`;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const addedUser = await User.create({
-      id, name, email, password: hashedPassword,
-    });
+    const addedUser = await User.create({ name, email, password: hashedPassword });
 
     return {
       id: addedUser.id,

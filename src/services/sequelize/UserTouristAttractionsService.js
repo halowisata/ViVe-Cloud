@@ -1,11 +1,8 @@
-const { nanoid } = require('nanoid');
 const { UserTouristAttraction } = require('../../../models');
 
 class UserTouristAttractionsService {
   async addUserTouristAttraction(userId, touristAttractionId) {
-    const id = `user_tourist_attraction-${nanoid(16)}`;
     const addedUserTouristAttraction = await UserTouristAttraction.create({
-      id,
       userId,
       touristAttractionId,
     });

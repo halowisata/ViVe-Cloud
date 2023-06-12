@@ -3,12 +3,13 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Surveys', {
       id: {
-        primaryKey: true,
         allowNull: false,
-        type: Sequelize.STRING,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
       },
       userId: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'Users',
@@ -16,14 +17,8 @@ module.exports = {
           },
         },
       },
-      moodId: {
+      mood: {
         type: Sequelize.STRING,
-        references: {
-          model: {
-            tableName: 'Moods',
-            key: 'id',
-          },
-        },
       },
       budget: {
         type: Sequelize.STRING,

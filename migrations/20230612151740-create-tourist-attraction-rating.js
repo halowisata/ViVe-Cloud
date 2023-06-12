@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserTouristAttractions', {
+    await queryInterface.createTable('TouristAttractionRatings', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,7 +17,7 @@ module.exports = {
           },
         },
       },
-      touristAttractionsId: {
+      touristAttractionId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
@@ -25,6 +25,10 @@ module.exports = {
             key: 'id',
           },
         },
+      },
+      rating: {
+        allowNull: false,
+        type: Sequelize.DOUBLE,
       },
       createdAt: {
         allowNull: false,
@@ -36,8 +40,7 @@ module.exports = {
       },
     });
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserTouristAttractions');
+    await queryInterface.dropTable('TouristAttractionRatings');
   },
 };

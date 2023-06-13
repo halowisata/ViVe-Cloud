@@ -2,30 +2,32 @@ const { default: axios } = require('axios');
 
 class TouristAttractionsHandler {
   async getTouristAttractionsHandler(req, res) {
-    const { location } = req.body;
     try {
-      const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+      const userId = req.user.id;
+      const { mood, budget, city } = req.query;
+      const response = await axios.get(`${process.env.ML_API}/recommendation`, {
         params: {
-          query: `tourist attractions in ${location}`,
-          keyword: 'point of interest',
-          key: process.env.GMAPS_API_KEY,
+          user_id: userId,
+          mood,
+          budget,
+          city,
         },
       });
 
-      const attractions = response.data.results.map((result) => ({
-        id: result.place_id,
-        name: result.name,
-        description: result.formatted_address,
-        photo: result.photos ? result.photos[0].photo_reference : null,
-        rating: result.rating,
-        latitude: result.geometry.location.lat,
-        longitude: result.geometry.location.lng,
-      }));
+      const attractionsData = response.data;
 
-      res.json(attractions);
+      const attractions = JSON.parse(attractionsData.replace(/\bNaN\b/g, 'null'));
+
+      res.status(200).json({
+        error: false,
+        message: 'tourist attractions retrieved',
+        data: attractions.data,
+      });
     } catch (error) {
-      console.error('Error fetching attractions:', error);
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({
+        error: true,
+        mesasge: error.mesasge,
+      });
     }
   }
 }

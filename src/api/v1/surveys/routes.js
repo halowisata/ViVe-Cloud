@@ -9,5 +9,6 @@ const handler = new SurveysHandler(service, validator);
 const router = express.Router();
 
 router.post('/', authentication, handler.postSurveyHandler);
+router.get('/', authentication, handler.getSurveyHandler);
 
 module.exports = router;

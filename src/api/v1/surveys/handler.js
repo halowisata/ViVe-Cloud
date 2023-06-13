@@ -4,6 +4,7 @@ class SurveysHandler {
     this._validator = validator;
 
     this.postSurveyHandler = this.postSurveyHandler.bind(this);
+    this.getSurveyHandler = this.getSurveyHandler.bind(this);
   }
 
   async postSurveyHandler(req, res) {
@@ -16,6 +17,23 @@ class SurveysHandler {
         error: false,
         message: 'survey created',
         data: addedSurvey,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: error.message,
+      });
+    }
+  }
+
+  async getSurveyHandler(req, res) {
+    try {
+      const retrievedSurvey = await this._service.getSurvey(req.user.id);
+
+      return res.status(200).json({
+        error: false,
+        message: 'survey retrieved',
+        data: retrievedSurvey,
       });
     } catch (error) {
       return res.status(400).json({

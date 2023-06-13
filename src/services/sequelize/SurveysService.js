@@ -28,7 +28,7 @@ class SurveysService {
   async getSurvey(userId) {
     const retrievedUser = await Survey.findOne({
       where: { userId },
-      attributes: ['mood', 'budget', 'travelDistance', 'destinationCity'],
+      attributes: ['id', 'userId', 'mood', 'budget', 'travelDistance', 'destinationCity'],
       order: [['createdAt', 'DESC']],
     });
 

@@ -5,6 +5,7 @@ const authenticationRoutes = require('./authentications/routes');
 const surveyRoutes = require('./surveys/routes');
 const touristAttractionRoutes = require('./tourist_attractions/routes');
 const userTouristAttractionRoutes = require('./user_tourist_attractions/routes');
+const savedtouristattractionRoutes = require('./saved_tourist_attractions/routes');
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.use('/authentications', authenticationRoutes);
 router.use('/surveys', surveyRoutes);
 router.use('/tourist-attractions', touristAttractionRoutes);
 router.use('/user-tourist-attractions', userTouristAttractionRoutes);
+router.use('/save-tourist-attractions', savedtouristattractionRoutes);
 
 module.exports = router;

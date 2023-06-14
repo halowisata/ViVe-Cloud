@@ -5,6 +5,7 @@ class SavedTouristAttractionsHandler {
 
     this.postSavedTouristAttraction = this.postSavedTouristAttraction.bind(this);
     this.getSavedTouristAttractions = this.getSavedTouristAttractions.bind(this);
+    this.deleteSavedTouristAttraction = this.deleteSavedTouristAttraction.bind(this);
   }
 
   async postSavedTouristAttraction(req, res) {
@@ -39,6 +40,25 @@ class SavedTouristAttractionsHandler {
         error: false,
         message: 'saved tourist attractions retrieved',
         data: retrievedTouristAttractions,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: true,
+        message: error.message,
+      });
+    }
+  }
+
+  async deleteSavedTouristAttraction(req, res) {
+    try {
+      await this._service.deleteSavedTouristAttraction(
+        req.user.id,
+        req.params.touristAttractionName,
+      );
+
+      return res.status(200).json({
+        error: false,
+        message: 'tourist attraction has been remove from bookmark',
       });
     } catch (error) {
       return res.status(400).json({

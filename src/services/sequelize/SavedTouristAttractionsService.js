@@ -40,6 +40,10 @@ class SavedTouristAttractionsService {
 
     return retrievedTouristAttractions;
   }
+
+  async deleteSavedTouristAttraction(userId, name) {
+    await SavedTouristAttraction.destroy({ where: { userId, name } });
+  }
 }
 
 module.exports = SavedTouristAttractionsService;

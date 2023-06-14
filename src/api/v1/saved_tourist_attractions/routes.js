@@ -10,5 +10,6 @@ const router = express.Router();
 
 router.post('/', authentication, handler.postSavedTouristAttraction);
 router.get('/', authentication, handler.getSavedTouristAttractions);
+router.delete('/:touristAttractionName', authentication, handler.deleteSavedTouristAttraction);
 
 module.exports = router;

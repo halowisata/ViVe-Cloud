@@ -31,6 +31,7 @@ class SavedTouristAttractionsService {
 
   async getSavedTouristAttractions(userId) {
     const retrievedTouristAttractions = await SavedTouristAttraction.findAll({
+      where: { userId },
       attributes: ['id', 'userId', 'name', 'city', 'description', 'rating', 'lat', 'lon'],
       distinct: true,
     });
